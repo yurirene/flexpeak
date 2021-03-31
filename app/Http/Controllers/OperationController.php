@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateOperationRequest;
 use App\Models\Inventory;
 use App\Models\Operation;
 use App\Models\OperationType;
@@ -13,33 +14,49 @@ class OperationController extends Controller
 {
     public function index()
     {
-        $list = Operation::with(['operationType','inventory'])->get();
+        $list = Operation::with(['operationType','inventory'])->latest()->paginate(5);
         
         return view("operation.index", ["list"=>$list]);
     }
 
     public function create()
     {
-        $operatoion_types = OperationType::all();
+        $operation_types = OperationType::all();
         $items = Inventory::all();
-        return view("operation.create",["$operatoion_types"=> $operatoion_types, "items"=>$items]);
+        return view("operation.create",[
+            "operation_types"=> $operation_types, 
+            "items"=>$items
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreUpdateOperationRequest $request)
     {
         
-        $item = new Operation;
-        $item->name = $request->name;
-        $item->minimal_qty = $request->minimal_qty;
-        $item->current_qty = 0;
+        $operation = new Operation();
+        $operation->inventory_id = $request->item;
+        $operation->operation_type_id = $request->operation_type;
+        $operation->volume = $request->volume;
         
-        if($request->is_fragrance){
-            $item->is_fragrance = 1;
+        if(!$operation->haveStock()){
+            
+            $message = [
+                "message" => "Você não tem Estoque para Fazer esse Lançamento!",
+                "type"=>"danger"
+            ];
+            return redirect()->route('operation.create')->with($message);
         }
         
-        if(!$item->save()){
+        if(!$operation->save()){
             $message = [
                 "message" => "Erro ao Registrar!",
+                "type"=>"danger"
+            ];
+        }
+        $inventory = (new Inventory())->updateStock($operation);
+        if(!$inventory){
+            $operation->delete();
+            $message = [
+                "message" => "Erro ao Atualizar o Estoque. Tente Novamente!",
                 "type"=>"danger"
             ];
         }
@@ -54,72 +71,112 @@ class OperationController extends Controller
     
     public function edit($id)
     {
-        $item = Operation::find($id);
-        if(!$item){
+        $operation = Operation::find($id);
+        if(!$operation){
             $message = [
-                "message" => "Item não Encontrado!",
+                "message" => "Registro Inválido!",
                 "type"=>"warning"
             ];
             return redirect()->route('operation.index')->with($message);
         }
-        
-        return view("operation.edit",["item"=>$item]);
+        $operation_types = OperationType::all();
+        $items = Inventory::all();
+        return view("operation.edit",[
+            "operation"=>$operation,
+            "operation_types"=> $operation_types, 
+            "items"=>$items
+        ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(StoreUpdateOperationRequest $request, $id)
     {
-        $item = Operation::find($id);
-        if(!$item){
+        $operation = Operation::find($id);
+        if(!$operation){
             $message = [
-                "message" => "Item não Encontrado!",
+                "message" => "Registro Inválido!",
                 "type"=>"warning"
             ];
             return redirect()->route('operation.index')->with($message);
         }
         
-        $item->minimal_qty = $request->minimal_qty;
-        $item->name = $request->name;
-        $item->is_fragrance = 0;
-        if($request->is_fragrance){
-            $item->is_fragrance = 1;
-        }
+        $obj = array(
+            "type"=>$operation->operation_type_id,
+            "volume"=>$operation->volume
+        );
         
-        if(!$item->save()){
+        $operation->inventory_id = $request->item;
+        $operation->operation_type_id = $request->operation_type;
+        $operation->volume = $request->volume;
+        
+        if(!$operation->haveStock($obj)){
+            
             $message = [
-                "message" => "Erro ao Atualizar!",
+                "message" => "Você não tem Estoque para Fazer essa Edição!",
                 "type"=>"danger"
             ];
+            return redirect()->route('operation.edit')->with($message);
+        }
+        
+        if(!$operation->save()){
+            $message = [
+                "message" => "Erro ao Atualizar Registro!",
+                "type"=>"danger"
+            ];
+        }
+        
+        $inventory = (new Inventory())->updateStock($operation,$obj);
+        if(!$inventory){
+            $operation->operation_type_id = $obj['type'];
+            $operation->volume = $obj['volume'];
+            $operation->save();
         }
         $message = [
             "message" => "Registro Atualizado com Sucesso!",
             "type"=>"success"
         ];
         
-        return redirect()->route('operation.index')
-                ->with($message);
+        return redirect()->route('operation.index')->with($message);
         
         
     }
 
     public function destroy(Request $request)
     {
-        $item = Operation::find($request->id);
-        if(!$item){
+        $operation = Operation::find($request->id);
+        if(!$operation){
             $message = [
-                "message" => "Item não Encontrado!",
+                "message" => "Registro Inválido!",
                 "type"=>"warning"
             ];
             return redirect()->route('operation.index')->with($message);
         }
         
-        if(!$item->delete()){
+        $obj = array(
+            "type"=>$operation->operation_type_id,
+            "volume"=>$operation->volume
+        );
+        
+        
+        $inventory = (new Inventory())->updateStockOnDelete($operation,$obj);
+        
+        if(!$inventory){
             $message = [
-                "message" => "Erro ao Excluir Item!",
+                "message" => "Erro ao Atualizar o Estoque!",
+                "type"=>"danger"
+            ];
+            return redirect()->route('operation.index')->with($message);
+        }
+        
+        if(!$operation->delete()){
+            $message = [
+                "message" => "Erro ao Excluir Registro!",
                 "type" => "danger"
             ];
         }
+        
+        
         $message = [
-            "message" => "Item Excluído!",
+            "message" => "Registro Excluído!",
             "type"=>"success"
         ];
         return redirect()->route('operation.index')->with($message);

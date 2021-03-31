@@ -15,6 +15,7 @@ class CreateRecipesTable extends Migration
     {
         Schema::create('recipes', function (Blueprint $table) {
             $table->id();
+            $table->string("name", 50);
             $table->decimal("per_water", 5, 2);
             $table->decimal("per_alcohol", 5, 2);
             $table->decimal("per_fragrance", 5, 2);

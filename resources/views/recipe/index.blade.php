@@ -3,29 +3,31 @@
 
 <div class="card">
     <div class="card-header d-flex justify-content-between">
-        Operações do Estoque
-        <a href="{{route("operation.create")}}" class="btn btn-primary">Adicionar Item</a>
+        Fórmulas
+        <a href="{{route("recipe.create")}}" class="btn btn-primary">Adicionar Item</a>
     </div>
     <div class="card-body">
         <table class="table table-responsive-md table table-striped">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">Data</th>
-                    <th scope="col">Tipo</th>
-                    <th scope="col">Item</th>
-                    <th scope="col">Volume</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Água</th>
+                    <th scope="col">Álcool</th>
+                    <th scope="col">Fragrância</th>
+                    <th scope="col">Nome da Fragrância</th>
                     <th scope="col" class="text-center">Ação</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($list as $item)
                 <tr>
-                    <td>{{date("d/m/y", strtotime($item->created_at))}}</td>
-                    <td>{{$item->operationType->name}}</td>
+                    <td>{{$item->name}}</td>
+                    <td>{{$item->per_water}}%</td>
+                    <td>{{$item->per_alcohol}}%</td>
+                    <td>{{$item->per_fragrance}}%</td>
                     <td>{{$item->inventory->name}}</td>
-                    <td>{{str_replace(".",",",$item->volume)}} L</td>
                     <td  class="text-center">
-                        <a href="{{route("operation.edit", ["id"=>$item->id])}}" class="btn btn-warning">Editar</a>
+                        <a href="{{route("recipe.edit", ["id"=>$item->id])}}" class="btn btn-warning">Editar</a>
                         <button href="#" class="btn btn-danger" 
                                 data-toggle="modal" 
                                 data-target="#delete" 
@@ -50,7 +52,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route("operation.destroy")}}" method="post">
+            <form action="{{route("recipe.destroy")}}" method="post">
                 @csrf
                 @method('DELETE')
                 <div class="modal-body">

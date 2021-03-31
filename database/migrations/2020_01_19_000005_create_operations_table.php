@@ -15,7 +15,7 @@ class CreateOperationsTable extends Migration
     {
         Schema::create('operations', function (Blueprint $table) {
             $table->id();
-            $table->decimal("volume", 10,4);
+            $table->decimal("volume", 8,2);
             $table->unsignedBigInteger("inventory_id");
             $table->unsignedBigInteger("operation_type_id");
             $table->foreign("inventory_id")

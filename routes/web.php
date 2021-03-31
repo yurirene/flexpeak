@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\{
     InventoryController,
-    OperationController
+    OperationController,
+    RecipeController
     
 };
 use Illuminate\Support\Facades\Route;
@@ -47,3 +48,16 @@ Route::delete("/Operacoes", [OperationController::class, "destroy"])
         ->name("operation.destroy");
 Route::put("/Operacoes/{id}", [OperationController::class, "update"])
         ->name("operation.update");
+
+Route::get("/Formulas", [RecipeController::class, "index"])
+        ->name("recipe.index");
+Route::get("/Formulas/Novo", [RecipeController::class, "create"])
+        ->name("recipe.create");
+Route::get("/Formulas/Editar/{id}", [RecipeController::class, "edit"])
+        ->name("recipe.edit");
+Route::post("/Formulas", [RecipeController::class, "store"])
+        ->name("recipe.store");
+Route::delete("/Formulas", [RecipeController::class, "destroy"])
+        ->name("recipe.destroy");
+Route::put("/Formulas/{id}", [RecipeController::class, "update"])
+        ->name("recipe.update");

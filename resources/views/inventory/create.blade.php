@@ -17,7 +17,7 @@
                 <label for="minimal_qty">Quantidade Mínima do Item</label>
                 <div class="input-group">
                     
-                    <input type="text" class="form-control" name="minimal_qty" id="minimal_qty" required>
+                    <input type="text" class="form-control decimal" name="minimal_qty" id="minimal_qty" required>
                     <div class="input-group-append">
                         <div class="input-group-text">Litros</div>
                     </div>

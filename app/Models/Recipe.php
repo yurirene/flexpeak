@@ -9,5 +9,11 @@ class Recipe extends Model
 {
     use HasFactory;
     protected $table = "recipes";
-    protected $fillable = ["per_water", "per_alcohol", "per_fragrance", "fragrance_id"];
+    protected $fillable = ["name", "per_water", "per_alcohol", "per_fragrance", "fragrance_id"];
+    
+    public function inventory()
+    {
+        return $this->hasOne(Inventory::class, "id", "fragrance_id");        
+    }
+    
 }

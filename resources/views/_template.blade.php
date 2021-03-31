@@ -27,6 +27,9 @@
                         <a class="nav-link" href="{{route("operation.index")}}">Operações do Estoque</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{route("recipe.index")}}">Fórmulas</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="#">Produção</a>
                     </li>
                 </ul>
@@ -35,6 +38,19 @@
         <div class="container">
             <div class="row mt-5 mb-5">
                 <div class="col-md-8 mx-auto">
+                    @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <ul>
+                            @foreach($errors->all() as $error)
+                            <li>{{$error}}</li>
+                            @endforeach
+                            
+                        </ul>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @endif
                     @if(session('message'))
                     <div class="alert alert-{{session('type')}} alert-dismissible" role="alert">
                         {{session('message')}}
@@ -54,6 +70,7 @@
         </div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+        <script src="/js/jquery.mask.js" ></script>
         <script src="/js/main.js" ></script>
     </body>
 </html>

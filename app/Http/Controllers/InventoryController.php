@@ -24,7 +24,7 @@ class InventoryController extends Controller
     public function store(Request $request)
     {
         
-        $item = new Inventory;
+        $item = new Inventory();
         $item->name = $request->name;
         $item->minimal_qty = $request->minimal_qty;
         $item->current_qty = 0;

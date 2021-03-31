@@ -2,83 +2,121 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Inventory;
+use App\Models\Recipe;
 use Illuminate\Http\Request;
+use function redirect;
+use function view;
 
 class RecipeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $list = Recipe::with("inventory")->orderBy("name")->paginate(5);
+        return view("recipe.index", ["list"=>$list]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        $fragrances = Inventory::where("is_fragrance", 1)->get();
+        return view("recipe.create",["fragrances"=>$fragrances]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        
+        $item = new Recipe();
+        $item->name = $request->name;
+        $item->per_water = $request->per_water;
+        $item->per_alcohol = $request->per_alcohol;
+        $item->per_fragrance = $request->per_fragrance;
+        $item->fragrance_id = $request->fragrance;
+        
+        if(!$item->save()){
+            $message = [
+                "message" => "Erro ao Registrar!",
+                "type"=>"danger"
+            ];
+        }
+        $message = [
+            "message" => "Registro Inserido com Sucesso!",
+            "type"=>"success"
+        ];
+        
+        return redirect()->route('recipe.index')->with($message);
+        
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function edit($id)
     {
-        //
+        $recipe = Recipe::find($id);
+        $fragrances = Inventory::where("is_fragrance", 1)->get();
+        if(!$recipe){
+            $message = [
+                "message" => "Item não Encontrado!",
+                "type"=>"warning"
+            ];
+            return redirect()->route('recipe.index')->with($message);
+        }
+        
+        return view("recipe.edit",["recipe"=>$recipe, "fragrances"=>$fragrances]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        $item = Recipe::find($id);
+        if(!$item){
+            $message = [
+                "message" => "Item não Encontrado!",
+                "type"=>"warning"
+            ];
+            return redirect()->route('recipe.index')->with($message);
+        }
+        
+        $item->name = $request->name;
+        $item->per_water = $request->per_water;
+        $item->per_alcohol = $request->per_alcohol;
+        $item->per_fragrance = $request->per_fragrance;
+        $item->fragrance_id = $request->fragrance;
+        
+        if(!$item->save()){
+            $message = [
+                "message" => "Erro ao Atualizar!",
+                "type"=>"danger"
+            ];
+        }
+        $message = [
+            "message" => "Registro Atualizado com Sucesso!",
+            "type"=>"success"
+        ];
+        
+        return redirect()->route('recipe.index')
+                ->with($message);
+        
+        
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $item = Recipe::find($request->id);
+        if(!$item){
+            $message = [
+                "message" => "Item não Encontrado!",
+                "type"=>"warning"
+            ];
+            return redirect()->route('recipe.index')->with($message);
+        }
+        
+        if(!$item->delete()){
+            $message = [
+                "message" => "Erro ao Excluir Item!",
+                "type" => "danger"
+            ];
+        }
+        $message = [
+            "message" => "Item Excluído!",
+            "type"=>"success"
+        ];
+        return redirect()->route('recipe.index')->with($message);
     }
 }

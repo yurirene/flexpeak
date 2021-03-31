@@ -16,8 +16,8 @@ class CreateInventoriesTable extends Migration
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
             $table->string("name", 50);
-            $table->decimal("current_qty", 9,3)->default(0);
-            $table->decimal("minimal_qty", 9,3)->default(0);
+            $table->decimal("current_qty", 8,2)->default(0);
+            $table->decimal("minimal_qty", 8,2)->default(0);
             $table->integer("is_fragrance")->default(0);
             $table->timestamps();
         });
