@@ -32,6 +32,14 @@ class RecipeController extends Controller
         $item->per_fragrance = $request->per_fragrance;
         $item->fragrance_id = $request->fragrance;
         
+        if(!$item->verifyPercent()){
+            $message = [
+                "message" => "Os percentuais não somam 100%",
+                "type"=>"warning"
+            ];
+            return redirect()->route('recipe.create')->with($message);
+        }
+        
         if(!$item->save()){
             $message = [
                 "message" => "Erro ao Registrar!",
@@ -42,7 +50,6 @@ class RecipeController extends Controller
             "message" => "Registro Inserido com Sucesso!",
             "type"=>"success"
         ];
-        
         return redirect()->route('recipe.index')->with($message);
         
     }
@@ -79,6 +86,14 @@ class RecipeController extends Controller
         $item->per_fragrance = $request->per_fragrance;
         $item->fragrance_id = $request->fragrance;
         
+        if(!$item->verifyPercent()){
+            $message = [
+                "message" => "Os percentuais não somam 100%",
+                "type"=>"warning"
+            ];
+            return redirect()->route('recipe.edit',["id"=>$id])->with($message);
+        }
+        
         if(!$item->save()){
             $message = [
                 "message" => "Erro ao Atualizar!",
@@ -101,7 +116,7 @@ class RecipeController extends Controller
         $item = Recipe::find($request->id);
         if(!$item){
             $message = [
-                "message" => "Item não Encontrado!",
+                "message" => "Registro não Encontrado!",
                 "type"=>"warning"
             ];
             return redirect()->route('recipe.index')->with($message);
@@ -109,12 +124,12 @@ class RecipeController extends Controller
         
         if(!$item->delete()){
             $message = [
-                "message" => "Erro ao Excluir Item!",
+                "message" => "Erro ao Excluir Registro!",
                 "type" => "danger"
             ];
         }
         $message = [
-            "message" => "Item Excluído!",
+            "message" => "Registro Excluído!",
             "type"=>"success"
         ];
         return redirect()->route('recipe.index')->with($message);

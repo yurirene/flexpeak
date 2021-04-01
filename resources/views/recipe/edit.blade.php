@@ -81,6 +81,12 @@
             <a href="{{route("recipe.index")}}" class="btn btn-secondary">Voltar</a>
         </form>
     </div>
+    <div class="card-footer">
+        <p class="text-muted">
+            Criado em: {{$recipe->created_at}}
+            <br>
+            Atualizado em: {{$recipe->updated_at}}</p>
+    </div>
 </div>
 
 @endsection

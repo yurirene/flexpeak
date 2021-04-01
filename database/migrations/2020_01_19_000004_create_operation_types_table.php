@@ -18,6 +18,17 @@ class CreateOperationTypesTable extends Migration
             $table->string("name", 20);
             $table->timestamps();
         });
+        
+        DB::table('operation_types')->insert(
+            array(
+                [
+                    'name' => "Entrada"
+                ],
+                [
+                    "name"=>"Saída"
+                ]
+            )
+        );
     }
 
     /**

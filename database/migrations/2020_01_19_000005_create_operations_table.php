@@ -20,10 +20,11 @@ class CreateOperationsTable extends Migration
             $table->unsignedBigInteger("operation_type_id");
             $table->foreign("inventory_id")
                     ->references("id")
-                    ->on("inventories");
+                    ->on("inventories")->cascadeOnDelete();
             $table->foreign("operation_type_id")
                     ->references("id")
-                    ->on("operation_types");
+                    ->on("operation_types")
+                    ->cascadeOnDelete();
             $table->timestamps();
         });
     }

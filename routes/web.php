@@ -3,7 +3,8 @@
 use App\Http\Controllers\{
     InventoryController,
     OperationController,
-    RecipeController
+    RecipeController,
+    ProductionController
     
 };
 use Illuminate\Support\Facades\Route;
@@ -61,3 +62,16 @@ Route::delete("/Formulas", [RecipeController::class, "destroy"])
         ->name("recipe.destroy");
 Route::put("/Formulas/{id}", [RecipeController::class, "update"])
         ->name("recipe.update");
+
+Route::get("/Producoes", [ProductionController::class, "index"])
+        ->name("production.index");
+Route::get("/Producoes/Novo", [ProductionController::class, "create"])
+        ->name("production.create");
+Route::get("/Producoes/Editar/{id}", [ProductionController::class, "edit"])
+        ->name("production.edit");
+Route::post("/Producoes", [ProductionController::class, "store"])
+        ->name("production.store");
+Route::delete("/Producoes", [ProductionController::class, "destroy"])
+        ->name("production.destroy");
+Route::put("/Producoes/{id}", [ProductionController::class, "update"])
+        ->name("production.update");

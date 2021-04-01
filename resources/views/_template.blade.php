@@ -30,7 +30,7 @@
                         <a class="nav-link" href="{{route("recipe.index")}}">Fórmulas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Produção</a>
+                        <a class="nav-link" href="{{route("production.index")}}">Produção</a>
                     </li>
                 </ul>
             </div>

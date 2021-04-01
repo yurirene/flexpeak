@@ -3,27 +3,27 @@
 
 <div class="card">
     <div class="card-header d-flex justify-content-between">
-        Estoque
-        <a href="{{route("inventory.create")}}" class="btn btn-primary">Adicionar Item</a>
+        Produções
+        <a href="{{route("production.create")}}" class="btn btn-primary">Adicionar Produção</a>
     </div>
     <div class="card-body">
         <table class="table table-responsive-md table table-striped">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Qtd. Atual</th>
-                    <th scope="col">Qtd. Mínima</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Receita</th>
+                    <th scope="col">Volume</th>
                     <th scope="col" class="text-center">Ação</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($list as $item)
                 <tr>
-                    <td>{{$item->name}}</td>
-                    <td>{{$item->current_qty}} mL</td>
-                    <td>{{str_replace(".",",",$item->minimal_qty)}} mL</td>
+                    <td>{{date("d/m/y", strtotime($item->created_at))}}</td>
+                    <td>{{$item->recipe->name}}</td>
+                    <td>{{$item->volume}}L</td>
                     <td  class="text-center">
-                        <a href="{{route("inventory.edit", ["id"=>$item->id])}}" class="btn btn-warning">Editar</a>
+                        <a href="{{route("production.edit", ["id"=>$item->id])}}" class="btn btn-warning">Editar</a>
                         <button href="#" class="btn btn-danger" 
                                 data-toggle="modal" 
                                 data-target="#delete" 
@@ -48,13 +48,12 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route("inventory.destroy")}}" method="post">
+            <form action="{{route("production.destroy")}}" method="post">
                 @csrf
                 @method('DELETE')
                 <div class="modal-body">
-                    <p>Ao fazer essa operação você estará apagando todos os 
-                        registros de entrada e saída do inventário, Fórmulas e 
-                        Registro de Produção que usem esse Item</p>
+                    <p>Ao fazer essa operação você estará alterando o valor
+                    atual do quantidade referente a esse produto. Confirmar Operação?</p>
                 </div>
                 <input type="text" name="id" id="id" hidden="hidden">
                 <div class="modal-footer">

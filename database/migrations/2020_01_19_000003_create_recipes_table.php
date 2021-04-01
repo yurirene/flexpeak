@@ -21,7 +21,9 @@ class CreateRecipesTable extends Migration
             $table->decimal("per_fragrance", 5, 2);
             $table->unsignedBigInteger("fragrance_id");
             $table->foreign('fragrance_id')
-                ->references('id')->on('inventories');
+                    ->references('id')
+                    ->on('inventories')
+                    ->cascadeOnDelete();
             $table->timestamps();
         });
     }

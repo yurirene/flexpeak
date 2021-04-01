@@ -48,6 +48,12 @@
             <a href="{{route("operation.index")}}" class="btn btn-secondary">Voltar</a>
         </form>
     </div>
+    <div class="card-footer">
+        <p class="text-muted">
+            Criado em: {{$operation->created_at}}
+            <br>
+            Atualizado em: {{$operation->updated_at}}</p>
+    </div>
 </div>
 
 @endsection

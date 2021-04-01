@@ -19,7 +19,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control decimal" name="minimal_qty" id="minimal_qty" value="{{$item->minimal_qty}}" required>
                     <div class="input-group-append">
-                        <div class="input-group-text">Litros</div>
+                        <div class="input-group-text">mL</div>
                     </div>
                 </div>
             </div>
@@ -30,6 +30,12 @@
             <button type="submit" class="btn btn-primary">Atualizar</button>
             <a href="{{route("inventory.index")}}" class="btn btn-secondary">Voltar</a>
         </form>
+    </div>
+    <div class="card-footer">
+        <p class="text-muted">
+            Criado em: {{$item->created_at}}
+            <br>
+            Atualizado em: {{$item->updated_at}}</p>
     </div>
 </div>
 
