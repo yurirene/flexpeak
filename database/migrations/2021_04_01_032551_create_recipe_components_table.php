@@ -20,7 +20,6 @@ class CreateRecipeComponentsTable extends Migration
             $table->decimal("percent", 5,2);
             $table->foreign("inventory_id")->references("id")->on("inventories")->cascadeOnDelete();
             $table->foreign("recipe_id")->references("id")->on("recipes")->cascadeOnDelete();
-            $table->timestamps();
         });
     }
 

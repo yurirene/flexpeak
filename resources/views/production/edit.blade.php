@@ -6,30 +6,50 @@
         Editar Registro de Produção
     </div>
     <div class="card-body">
-        <form action="{{route("production.update",["id"=>$production->id])}}" method="post">
-            @csrf
-            @method("PUT")
-            <div class="form-group">
-                <label for="recipe">Receita</label>
-                <select class="form-control" id="recipe" name="recipe" required>
-                    @foreach($recipes as $recipe)
-                    <option value="{{$recipe->id}}" 
-                            @if((int)$recipe->id==(int)$production->recipe_id) {
-                        {{'selected'}}
-                        } @endif>
-                        {{$recipe->name}}
-                    </option>
-                    @endforeach
-                </select>
+        <div class="row">
+            <div class="col-md-6">
+                <form action="{{route("production.update")}}" method="post">
+                    @csrf
+                    <div class="form-group">
+                        <label for="recipe-production">Fórmula</label>
+                        <select class="form-control" id="recipe-production" name="recipe" required>
+                            <option selected disabled>Selecione a Receitas</option>
+                            @foreach($recipes as $recipe)
+                            <option value="{{$recipe->id}}"
+                                    data-info='@json($recipe->components)'>
+                                {{$recipe->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="volume-production">Volume</label>
+                        <div class="input-group">
+                            <input type="text" name="volume" id="volume-production" class="form-control decimal">
+                            <div class="input-group-append">
+                                <div class="input-group-text">mL</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    <a href="{{route("production.index")}}" class="btn btn-secondary">Voltar</a>
+                </form>
             </div>
-            
-            <div class="form-group">
-                <label for="volume">Volume</label>
-                <input type="text" name="volume" id="volume" class="form-control decimal" value="{{$production->volume}}">
+            <div class="col">
+                <h4 class="text-muted">Ingredientes:</h4>
+                <table class="table">
+                    <thead>
+                        <th>Nome</th>
+                        <th>Necessário</th>
+                        <th>Disponível</th>
+                    </thead>
+                    <tbody id="ingredients-show">
+                        
+                    </tbody>
+                </table>
             </div>
-            <button type="submit" class="btn btn-primary">Atualizar</button>
-            <a href="{{route("production.index")}}" class="btn btn-secondary">Voltar</a>
-        </form>
+        </div>
     </div>
 </div>
 

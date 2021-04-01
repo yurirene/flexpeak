@@ -31,7 +31,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control decimal" name="volume" id="volume" required>
                     <div class="input-group-append">
-                        <div class="input-group-text">Litros</div>
+                        <div class="input-group-text">mL</div>
                     </div>
                 </div>
             </div>

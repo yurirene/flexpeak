@@ -57,4 +57,5 @@ class Inventory extends Model
         }
         return true;
     }
+    
 }

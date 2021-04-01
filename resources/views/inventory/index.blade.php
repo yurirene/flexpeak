@@ -21,7 +21,7 @@
                 <tr>
                     <td>{{$item->name}}</td>
                     <td>{{$item->current_qty}} mL</td>
-                    <td>{{str_replace(".",",",$item->minimal_qty)}} mL</td>
+                    <td>{{$item->minimal_qty}} mL</td>
                     <td  class="text-center">
                         <a href="{{route("inventory.edit", ["id"=>$item->id])}}" class="btn btn-warning">Editar</a>
                         <button href="#" class="btn btn-danger" 

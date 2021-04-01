@@ -20,7 +20,7 @@ class ProductionController extends Controller
 
     public function create()
     {
-        $recipes = Recipe::get();
+        $recipes = Recipe::with("components")->get();
         return view("production.create",["recipes"=>$recipes]);
     }
 
@@ -31,7 +31,13 @@ class ProductionController extends Controller
         $item->recipe_id = $request->recipe;
         $item->volume = $request->volume;
         
-        
+        if(!$item->haveStock()){
+            $message = [
+                "message" => "Sem estoque suficiente para produzir essa quantidade!",
+                "type"=>"danger"
+            ];
+            return redirect()->route('production.create')->with($message);
+        }
         
         if(!$item->save()){
             $message = [
@@ -39,6 +45,9 @@ class ProductionController extends Controller
                 "type"=>"danger"
             ];
         }
+        
+        $item->updateStock();
+        
         $message = [
             "message" => "Registro Inserido com Sucesso!",
             "type"=>"success"
@@ -72,9 +81,20 @@ class ProductionController extends Controller
             ];
             return redirect()->route('production.index')->with($message);
         }
-        
+        $reverse = array(
+            "type"=>2,
+            "volume"=>$item->volume
+        );
         $item->recipe_id = $request->recipe;
         $item->volume = $request->volume;
+        
+        if(!$item->haveStock()){
+            $message = [
+                "message" => "Sem estoque suficiente para produzir essa quantidade!",
+                "type"=>"danger"
+            ];
+            return redirect()->route('production.create')->with($message);
+        }
         
         if(!$item->save()){
             $message = [
@@ -82,6 +102,8 @@ class ProductionController extends Controller
                 "type"=>"danger"
             ];
         }
+        $item->updateStock($reverse);
+        
         $message = [
             "message" => "Registro Atualizado com Sucesso!",
             "type"=>"success"
@@ -103,12 +125,19 @@ class ProductionController extends Controller
             return redirect()->route('production.index')->with($message);
         }
         
+        $reverse = array(
+            "type"=>2,
+            "volume"=>$item->volume
+        );
+        
         if(!$item->delete()){
             $message = [
                 "message" => "Erro ao Excluir Registro!",
                 "type" => "danger"
             ];
         }
+        //$item->deleteAndUpdateStock($reverse);
+        
         $message = [
             "message" => "Registro Excluído!",
             "type"=>"success"

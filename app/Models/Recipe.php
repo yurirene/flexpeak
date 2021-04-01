@@ -9,22 +9,30 @@ class Recipe extends Model
 {
     use HasFactory;
     protected $table = "recipes";
-    protected $fillable = ["name", "per_water", "per_alcohol", "per_fragrance", "fragrance_id"];
+    protected $fillable = ["name"];
     
-    public function verifyPercent():bool {
-        $water = floatval($this->per_water);
-        $alcohol = floatval($this->per_alcohol);
-        $fragrance = floatval($this->per_fragrance);
-        $percent = $water + $alcohol + $fragrance;
-        if($percent!=100){
+    
+    public function verifyPercent(array $percents):bool {
+        
+        $total=0;
+        
+        foreach($percents as $percent){
+            $total += floatval($percent);
+        }
+        if($total!=100){
             return false;
         }
         return true;
     }
     
-    public function inventory()
+   
+    public function components()
     {
-        return $this->hasOne(Inventory::class, "id", "fragrance_id");        
+        return $this->belongsToMany(Inventory::class, 
+                "recipe_components", 
+                "recipe_id", 
+                "inventory_id")
+                ->withPivot(['percent']);        
     }
     
 }

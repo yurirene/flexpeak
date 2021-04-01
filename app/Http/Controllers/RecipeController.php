@@ -12,40 +12,48 @@ class RecipeController extends Controller
 {
     public function index()
     {
-        $list = Recipe::with("inventory")->orderBy("name")->paginate(5);
+        $list = Recipe::with("components")->paginate(5);
+        
         return view("recipe.index", ["list"=>$list]);
     }
 
     public function create()
     {
-        $fragrances = Inventory::where("is_fragrance", 1)->get();
-        return view("recipe.create",["fragrances"=>$fragrances]);
+        $inventories = Inventory::get();
+        return view("recipe.create",["inventories"=>$inventories]);
     }
 
     public function store(Request $request)
     {
         
-        $item = new Recipe();
-        $item->name = $request->name;
-        $item->per_water = $request->per_water;
-        $item->per_alcohol = $request->per_alcohol;
-        $item->per_fragrance = $request->per_fragrance;
-        $item->fragrance_id = $request->fragrance;
+        $recipe = new Recipe();
+        $recipe->name = $request->name;
         
-        if(!$item->verifyPercent()){
+        $parameters = array();
+        
+        foreach($request->ingredients['id'] as $k => $v){
+            $parameters[$v] = [
+                "percent"=>$request->ingredients['percent'][$k]
+            ];
+        }
+        
+        
+        if(!$recipe->verifyPercent($request->ingredients['percent'])){
             $message = [
-                "message" => "Os percentuais não somam 100%",
+                "message" => "Os percentuais não totalizam 100%",
                 "type"=>"warning"
             ];
             return redirect()->route('recipe.create')->with($message);
         }
         
-        if(!$item->save()){
+        if(!$recipe->save()){
             $message = [
                 "message" => "Erro ao Registrar!",
                 "type"=>"danger"
             ];
         }
+        $recipe->components()->sync($parameters);
+        
         $message = [
             "message" => "Registro Inserido com Sucesso!",
             "type"=>"success"
@@ -56,8 +64,8 @@ class RecipeController extends Controller
     
     public function edit($id)
     {
-        $recipe = Recipe::find($id);
-        $fragrances = Inventory::where("is_fragrance", 1)->get();
+        $recipe = Recipe::with("components")->find($id);
+        $inventories = Inventory::get();
         if(!$recipe){
             $message = [
                 "message" => "Item não Encontrado!",
@@ -66,12 +74,16 @@ class RecipeController extends Controller
             return redirect()->route('recipe.index')->with($message);
         }
         
-        return view("recipe.edit",["recipe"=>$recipe, "fragrances"=>$fragrances]);
+        return view("recipe.edit",[
+            "recipe"=>$recipe, 
+            "inventories"=>$inventories
+        ]);
     }
 
     public function update(Request $request, $id)
     {
         $item = Recipe::find($id);
+                
         if(!$item){
             $message = [
                 "message" => "Item não Encontrado!",
@@ -81,14 +93,20 @@ class RecipeController extends Controller
         }
         
         $item->name = $request->name;
-        $item->per_water = $request->per_water;
-        $item->per_alcohol = $request->per_alcohol;
-        $item->per_fragrance = $request->per_fragrance;
-        $item->fragrance_id = $request->fragrance;
         
-        if(!$item->verifyPercent()){
+        
+        $parameters = array();
+        
+        foreach($request->ingredients['id'] as $k => $v){
+            $parameters[$v] = [
+                "percent"=>$request->ingredients['percent'][$k]
+            ];
+        }
+        
+        
+        if(!$item->verifyPercent($request->ingredients['percent'])){
             $message = [
-                "message" => "Os percentuais não somam 100%",
+                "message" => "Os percentuais não totalizam 100%",
                 "type"=>"warning"
             ];
             return redirect()->route('recipe.edit',["id"=>$id])->with($message);
@@ -100,6 +118,10 @@ class RecipeController extends Controller
                 "type"=>"danger"
             ];
         }
+        
+        
+        $item->components()->sync($parameters);
+        
         $message = [
             "message" => "Registro Atualizado com Sucesso!",
             "type"=>"success"

@@ -15,11 +15,11 @@ class CreateProductionsTable extends Migration
     {
         Schema::create('productions', function (Blueprint $table) {
             $table->id();
-            $table->decimal("volume", 10,4);
+            $table->decimal("volume", 8,2);
             $table->unsignedBigInteger("recipe_id");
             $table->foreign("recipe_id")
                     ->references("id")
-                    ->on("recipes")->cascadeOnDelete();
+                    ->on("recipes");
             $table->timestamps();
         });
     }

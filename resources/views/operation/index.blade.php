@@ -4,7 +4,7 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between">
         Operações do Estoque
-        <a href="{{route("operation.create")}}" class="btn btn-primary">Adicionar Item</a>
+        <a href="{{route("operation.create")}}" class="btn btn-primary">Adicionar Registro</a>
     </div>
     <div class="card-body">
         <table class="table table-responsive-md table table-striped">
@@ -23,7 +23,7 @@
                     <td>{{date("d/m/y", strtotime($item->created_at))}}</td>
                     <td>{{$item->operationType->name}}</td>
                     <td>{{$item->inventory->name}}</td>
-                    <td>{{str_replace(".",",",$item->volume)}} L</td>
+                    <td>{{$item->volume}} mL</td>
                     <td  class="text-center">
                         <a href="{{route("operation.edit", ["id"=>$item->id])}}" class="btn btn-warning">Editar</a>
                         <button href="#" class="btn btn-danger" 

@@ -21,7 +21,7 @@
                 <tr>
                     <td>{{date("d/m/y", strtotime($item->created_at))}}</td>
                     <td>{{$item->recipe->name}}</td>
-                    <td>{{$item->volume}}L</td>
+                    <td>{{$item->volume}} mL</td>
                     <td  class="text-center">
                         <a href="{{route("production.edit", ["id"=>$item->id])}}" class="btn btn-warning">Editar</a>
                         <button href="#" class="btn btn-danger" 

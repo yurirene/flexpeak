@@ -16,29 +16,47 @@ class Production extends Model
         return $this->hasOne(Recipe::class, "id", "recipe_id");        
     }
     
-    public function haveStock(array $reverse = null):bool {
-        $item = Inventory::find($this->inventory_id);
-        $result = 0;
-        $current_qty = floatval($item->current_qty);
+    public function haveStock():bool {
         
-        if($reverse){
-            if($reverse['type']==1){
-                $current_qty = $current_qty - floatval($reverse['volume']);
+        
+        $recipe = Recipe::with("components")->find($this->recipe_id);
+        
+        foreach($recipe->components as $item){
+            $volume = (floatval($item->pivot->percent)/100)*$this->volume;
+            $current_qty = floatval($item->current_qty);
+            
+            if($volume > $current_qty){
+                return false;
             }
-            if($reverse['type']==2){
-                $current_qty = $current_qty + floatval($reverse['volume']);
-            }           
-        }
-        
-        if($this->operation_type_id == 2){
-            $result = $current_qty - floatval($this->volume);
-        }
-        
-        if($result < 0){
-            return false;
+            
         }
         return true;
-        
     }
-    
+    public function updateStock(array $reverse=null):void
+    {
+        $volume = 0;
+        
+        $recipe = Recipe::with("components")->find($this->recipe_id);
+        
+       
+        
+        
+        foreach($recipe->components as $item){
+            $volume = (floatval($item->pivot->percent)/100)*$this->volume;
+            
+            $operation = new Operation();
+            $operation->operation_type_id = 2;
+            $operation->volume = $volume;
+            $operation->inventory_id = $item->pivot->inventory_id;
+            if ($reverse) {
+                $reverse["volume"] = (floatval($item->pivot->percent) / 100)
+                        * $reverse["volume"];
+            }
+            if($operation->save()){
+                 
+                (new Inventory())->updateStock($operation, $reverse);
+            }
+                    
+        }
+    }
 }
