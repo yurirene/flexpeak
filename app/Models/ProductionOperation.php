@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Inventory extends Model
+class ProductionOperation extends Model
 {
     use HasFactory;
-    protected $table = "inventories";
-    protected $fillable = ["name", "current_qty", "minimal_qty", "is_fragrance"];
+    protected $table = "production_operations";
+    protected $fillable = ["operation_id", "recipe_id"];
     
     
     

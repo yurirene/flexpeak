@@ -2,15 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Inventory;
 use App\Models\Production;
 use App\Models\Recipe;
+use App\Services\ProductionService;
 use Illuminate\Http\Request;
 use function redirect;
 use function view;
 
 class ProductionController extends Controller
 {
+    
+    protected $service;
+    
+    public function __construct(ProductionService $service) {
+        $this->service = $service;
+    }
+    
+    
     public function index()
     {
         $list = Production::with("recipe")->paginate(5);
@@ -26,40 +34,21 @@ class ProductionController extends Controller
 
     public function store(Request $request)
     {
-        
-        $item = new Production();
-        $item->recipe_id = $request->recipe;
-        $item->volume = $request->volume;
-        
-        if(!$item->haveStock()){
-            $message = [
-                "message" => "Sem estoque suficiente para produzir essa quantidade!",
-                "type"=>"danger"
-            ];
-            return redirect()->route('production.create')->with($message);
-        }
-        
-        if(!$item->save()){
-            $message = [
-                "message" => "Erro ao Registrar!",
-                "type"=>"danger"
-            ];
-        }
-        
-        $item->updateStock();
+        $return = $this->service->store($request->all());
         
         $message = [
-            "message" => "Registro Inserido com Sucesso!",
-            "type"=>"success"
+            "message" => $return["message"],
+            "type"=> $return["type"]
         ];
-        return redirect()->route('production.index')->with($message);
+        
+        return redirect()->route($return["route"])->with($message);
         
     }
     
     public function edit($id)
     {
         $production = Production::find($id);
-        $recipes = Recipe::get();
+        $recipe = Recipe::find($production->recipe_id);
         if(!$production){
             $message = [
                 "message" => "Item não Encontrado!",
@@ -68,80 +57,31 @@ class ProductionController extends Controller
             return redirect()->route('production.index')->with($message);
         }
         
-        return view("production.edit",["production"=>$production, "recipes"=>$recipes]);
+        return view("production.edit",["production"=>$production, "recipe"=>$recipe]);
     }
 
     public function update(Request $request, $id)
     {
-        $item = Production::find($id);
-        if(!$item){
-            $message = [
-                "message" => "Item não Encontrado!",
-                "type"=>"warning"
-            ];
-            return redirect()->route('production.index')->with($message);
-        }
-        $reverse = array(
-            "type"=>2,
-            "volume"=>$item->volume
-        );
-        $item->recipe_id = $request->recipe;
-        $item->volume = $request->volume;
-        
-        if(!$item->haveStock()){
-            $message = [
-                "message" => "Sem estoque suficiente para produzir essa quantidade!",
-                "type"=>"danger"
-            ];
-            return redirect()->route('production.create')->with($message);
-        }
-        
-        if(!$item->save()){
-            $message = [
-                "message" => "Erro ao Atualizar!",
-                "type"=>"danger"
-            ];
-        }
-        $item->updateStock($reverse);
+        $return = $this->service->update($request->all(),$id);
         
         $message = [
-            "message" => "Registro Atualizado com Sucesso!",
-            "type"=>"success"
+            "message" => $return["message"],
+            "type"=> $return["type"]
         ];
         
-        return redirect()->route('production.index')->with($message);
-        
+        return redirect()->route($return["route"], $id)->with($message);
         
     }
 
     public function destroy(Request $request)
     {
-        $item = Production::find($request->id);
-        if(!$item){
-            $message = [
-                "message" => "Registro não Encontrado!",
-                "type"=>"warning"
-            ];
-            return redirect()->route('production.index')->with($message);
-        }
-        
-        $reverse = array(
-            "type"=>2,
-            "volume"=>$item->volume
-        );
-        
-        if(!$item->delete()){
-            $message = [
-                "message" => "Erro ao Excluir Registro!",
-                "type" => "danger"
-            ];
-        }
-        //$item->deleteAndUpdateStock($reverse);
+        $return = $this->service->destroy($request->all());
         
         $message = [
-            "message" => "Registro Excluído!",
-            "type"=>"success"
+            "message" => $return["message"],
+            "type"=> $return["type"]
         ];
-        return redirect()->route('production.index')->with($message);
+        
+        return redirect()->route($return["route"])->with($message);
     }
 }

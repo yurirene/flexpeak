@@ -26,6 +26,8 @@ class CreateOperationsTable extends Migration
                     ->on("operation_types")
                     ->cascadeOnDelete();
             $table->timestamps();
+            
+            $table->softDeletes();
         });
     }
 

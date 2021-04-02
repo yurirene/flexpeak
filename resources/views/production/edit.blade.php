@@ -8,31 +8,32 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-6">
-                <form action="{{route("production.update")}}" method="post">
+                <form action="{{route("production.update", ["id"=>$production->id])}}" method="post">
                     @csrf
+                    @method('PUT')
                     <div class="form-group">
-                        <label for="recipe-production">Fórmula</label>
-                        <select class="form-control" id="recipe-production" name="recipe" required>
-                            <option selected disabled>Selecione a Receitas</option>
-                            @foreach($recipes as $recipe)
+                        <label for="recipe-production-edit">Fórmula</label>
+                        <select class="form-control" id="recipe-production-edit" disabled>
                             <option value="{{$recipe->id}}"
-                                    data-info='@json($recipe->components)'>
+                                    data-info='@json($recipe->components)' 
+                                    selected >
                                 {{$recipe->name}}</option>
-                            @endforeach
                         </select>
                     </div>
-
                     <div class="form-group">
-                        <label for="volume-production">Volume</label>
+                        <label for="volume-production-edit">Volume</label>
                         <div class="input-group">
-                            <input type="text" name="volume" id="volume-production" class="form-control decimal">
+                            <input type="text" name="volume" 
+                                   id="volume-production-edit" 
+                                   class="form-control decimal" 
+                                   value="{{$production->volume}}">
                             <div class="input-group-append">
                                 <div class="input-group-text">mL</div>
                             </div>
                         </div>
                     </div>
-
-                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    
+                    <button type="submit" class="btn btn-primary">Atualizar</button>
                     <a href="{{route("production.index")}}" class="btn btn-secondary">Voltar</a>
                 </form>
             </div>

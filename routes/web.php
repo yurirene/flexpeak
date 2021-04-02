@@ -75,3 +75,6 @@ Route::delete("/Producoes", [ProductionController::class, "destroy"])
         ->name("production.destroy");
 Route::put("/Producoes/{id}", [ProductionController::class, "update"])
         ->name("production.update");
+
+Route::get("/Relatorios", [ReportController::class, "index"])
+        ->name("report.index");

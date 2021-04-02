@@ -10,21 +10,6 @@ class Recipe extends Model
     use HasFactory;
     protected $table = "recipes";
     protected $fillable = ["name"];
-    
-    
-    public function verifyPercent(array $percents):bool {
-        
-        $total=0;
-        
-        foreach($percents as $percent){
-            $total += floatval($percent);
-        }
-        if($total!=100){
-            return false;
-        }
-        return true;
-    }
-    
    
     public function components()
     {

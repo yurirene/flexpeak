@@ -16,19 +16,8 @@ class CreateOperationTypesTable extends Migration
         Schema::create('operation_types', function (Blueprint $table) {
             $table->id();
             $table->string("name", 20);
-            $table->timestamps();
         });
         
-        DB::table('operation_types')->insert(
-            array(
-                [
-                    'name' => "Entrada"
-                ],
-                [
-                    "name"=>"Saída"
-                ]
-            )
-        );
     }
 
     /**

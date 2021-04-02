@@ -3,13 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inventory;
+use App\Services\InventoryService;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use function redirect;
 use function view;
 
 class InventoryController extends Controller
 {
+    
+    protected $service;
+    
+    public function __construct(InventoryService $service) {
+        $this->service = $service;
+    }
+    
     public function index()
     {
         $list = Inventory::paginate(5);
@@ -23,28 +30,14 @@ class InventoryController extends Controller
 
     public function store(Request $request)
     {
+        $return = $this->service->store($request->all());
         
-        $item = new Inventory();
-        $item->name = $request->name;
-        $item->minimal_qty = $request->minimal_qty;
-        $item->current_qty = 0;
-        
-        if($request->is_fragrance){
-            $item->is_fragrance = 1;
-        }
-        
-        if(!$item->save()){
-            $message = [
-                "message" => "Erro ao Registrar!",
-                "type"=>"danger"
-            ];
-        }
         $message = [
-            "message" => "Registro Inserido com Sucesso!",
-            "type"=>"success"
+            "message" => $return["message"],
+            "type"=> $return["type"]
         ];
         
-        return redirect()->route('inventory.index')->with($message);
+        return redirect()->route($return["route"])->with($message);
         
     }
     
@@ -64,60 +57,22 @@ class InventoryController extends Controller
 
     public function update(Request $request, $id)
     {
-        $item = Inventory::find($id);
-        if(!$item){
-            $message = [
-                "message" => "Item não Encontrado!",
-                "type"=>"warning"
-            ];
-            return redirect()->route('inventory.index')->with($message);
-        }
-        
-        $item->minimal_qty = $request->minimal_qty;
-        $item->name = $request->name;
-        $item->is_fragrance = 0;
-        if($request->is_fragrance){
-            $item->is_fragrance = 1;
-        }
-        
-        if(!$item->save()){
-            $message = [
-                "message" => "Erro ao Atualizar!",
-                "type"=>"danger"
-            ];
-        }
+        $return = $this->service->update($request->all(), $id);
         $message = [
-            "message" => "Registro Atualizado com Sucesso!",
-            "type"=>"success"
+            "message" => $return["message"],
+            "type" => $return["type"]
         ];
         
-        return redirect()->route('inventory.index')
-                ->with($message);
-        
-        
+        return redirect()->route($return["route"],["id"=>$id])->with($message);
     }
 
     public function destroy(Request $request)
     {
-        $item = Inventory::find($request->id);
-        if(!$item){
-            $message = [
-                "message" => "Item não Encontrado!",
-                "type"=>"warning"
-            ];
-            return redirect()->route('inventory.index')->with($message);
-        }
-        
-        if(!$item->delete()){
-            $message = [
-                "message" => "Erro ao Excluir Item!",
-                "type" => "danger"
-            ];
-        }
+        $return = $this->service->destroy($request->all());
         $message = [
-            "message" => "Item Excluído!",
-            "type"=>"success"
+            "message" => $return["message"],
+            "type" => $return["type"]
         ];
-        return redirect()->route('inventory.index')->with($message);
+        return redirect()->route($return["route"])->with($message);
     }
 }
