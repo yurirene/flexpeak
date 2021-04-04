@@ -35,6 +35,6 @@ Preciso ter um banco de dados dos perfumes que fabrico, qual a quantidade de cad
     <img src="https://logodownload.org/wp-content/uploads/2017/10/jquery-logo.png" width="400">
 </p>
 
-## License
+## Autor
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+@yurirene
