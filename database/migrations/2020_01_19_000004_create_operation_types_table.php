@@ -17,7 +17,16 @@ class CreateOperationTypesTable extends Migration
             $table->id();
             $table->string("name", 20);
         });
-        
+        DB::table('operation_types')->insert(
+            array(
+                [
+                    'name' => "Entrada"
+                ],
+                [
+                    "name"=>"Saída"
+                ]
+            )
+        );
     }
 
     /**

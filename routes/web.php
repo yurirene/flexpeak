@@ -4,7 +4,8 @@ use App\Http\Controllers\{
     InventoryController,
     OperationController,
     RecipeController,
-    ProductionController
+    ProductionController,
+    ReportController
     
 };
 use Illuminate\Support\Facades\Route;
@@ -20,9 +21,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::get("/Estoque", [InventoryController::class, "index"])
         ->name("inventory.index");
@@ -76,5 +74,12 @@ Route::delete("/Producoes", [ProductionController::class, "destroy"])
 Route::put("/Producoes/{id}", [ProductionController::class, "update"])
         ->name("production.update");
 
-Route::get("/Relatorios", [ReportController::class, "index"])
+
+Route::get("/", [ReportController::class, "index"])
         ->name("report.index");
+
+Route::get("/Relatorios", [ReportController::class, "report"])
+        ->name("report.report");
+
+Route::post("/Relatorios", [ReportController::class, "reportWithDate"])
+        ->name("report.reportwithdate");

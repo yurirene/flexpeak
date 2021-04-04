@@ -33,9 +33,9 @@
     </div>
     <div class="card-footer">
         <p class="text-muted">
-            Criado em: {{$item->created_at}}
+            Criado em: {{date("d/m/y H:i:s", strtotime($item->created_at))}}
             <br>
-            Atualizado em: {{$item->updated_at}}</p>
+            Atualizado em: {{date("d/m/y H:i:s", strtotime($item->updated_at))}}</p>
     </div>
 </div>
 

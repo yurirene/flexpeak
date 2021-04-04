@@ -13,7 +13,7 @@
                     @method('PUT')
                     <div class="form-group">
                         <label for="recipe-production-edit">Fórmula</label>
-                        <select class="form-control" id="recipe-production-edit" disabled>
+                        <select class="form-control" id="recipe-production-edit" name="recipe" readonly>
                             <option value="{{$recipe->id}}"
                                     data-info='@json($recipe->components)' 
                                     selected >
@@ -39,7 +39,7 @@
             </div>
             <div class="col">
                 <h4 class="text-muted">Ingredientes:</h4>
-                <table class="table">
+                <table class="table text-muted">
                     <thead>
                         <th>Nome</th>
                         <th>Necessário</th>
@@ -51,6 +51,12 @@
                 </table>
             </div>
         </div>
+    </div>
+    <div class="card-footer">
+        <p class="text-muted">
+            Criado em: {{date("d/m/y H:i:s", strtotime($production->created_at))}}
+            <br>
+            Atualizado em: {{date("d/m/y H:i:s", strtotime($production->updated_at))}}</p>
     </div>
 </div>
 

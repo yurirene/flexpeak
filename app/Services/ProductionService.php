@@ -97,15 +97,18 @@ class ProductionService
                 "success"=>false,
                 "message"=> $e->getMessage(),
                 "type"=>"danger",
-                "route" =>"production.edit"
+                "route" => [
+                    "production.edit",
+                    "id" => $id
+                ]
             ];
         }
     }
 
-    public function destroy(array $data):array
+    public function destroy($id):array
     {
         try {
-            $item = Production::with("operations")->find($data["id"]);
+            $item = Production::with("operations")->find($id);
             if (!$item) {
                 throw new InvalidArgumentException("Registro inválido");
             }

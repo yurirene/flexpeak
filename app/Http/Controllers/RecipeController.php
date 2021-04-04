@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteRequest;
+use App\Http\Requests\StoreUpdateRecipeRequest;
 use App\Models\Inventory;
 use App\Models\Recipe;
 use App\Services\RecipeService;
@@ -31,7 +33,7 @@ class RecipeController extends Controller
         return view("recipe.create",["inventories"=>$inventories]);
     }
 
-    public function store(Request $request)
+    public function store(StoreUpdateRecipeRequest $request)
     {
         $return = $this->service->store($request->all());
         
@@ -39,7 +41,6 @@ class RecipeController extends Controller
             "message" => $return["message"],
             "type"=> $return["type"]
         ];
-        
         return redirect()->route($return["route"])->with($message);
         
     }
@@ -62,7 +63,7 @@ class RecipeController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(StoreUpdateRecipeRequest $request, $id)
     {
         $return = $this->service->update($request->all(), $id);
         
@@ -71,12 +72,12 @@ class RecipeController extends Controller
             "type"=> $return["type"]
         ];
         
-        return redirect()->route($return["route"],["id"=>$id])->with($message);
+        return redirect()->route($return["route"])->with($message);
     }
 
-    public function destroy(Request $request)
+    public function destroy(DeleteRequest $request)
     {
-       $return = $this->service->destroy($request->all());
+       $return = $this->service->destroy($request->id);
         
         $message = [
             "message" => $return["message"],

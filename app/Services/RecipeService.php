@@ -24,10 +24,6 @@ class RecipeService
                 ];
             }
 
-            if (!$this->verifyPercent($data["ingredients"]['percent'])) {
-                throw new InvalidArgumentException("Os percentuais não totalizam 100%");
-            }
-
             if (!$recipe->save()) {
                 throw new Exception("Erro ao Registrar!");
             }
@@ -91,15 +87,18 @@ class RecipeService
                 "success"=>false,
                 "message"=> $e->getMessage(),
                 "type"=>"danger",
-                "route" =>"recipe.edit"
+                "route" => [
+                    "recipe.edit",
+                    "id" => $id
+                ]
             ];
         }
     }
 
-    public function destroy(array $data):array
+    public function destroy($id):array
     {
         try {
-            $item = Recipe::find($data['id']);
+            $item = Recipe::find($id);
             if (!$item) {
                 throw new InvalidArgumentException("Registro Inválido");
             }
@@ -123,16 +122,4 @@ class RecipeService
         }
     }
     
-    public function verifyPercent(array $percents):bool {
-        
-        $total=0;
-        
-        foreach($percents as $percent){
-            $total += floatval($percent);
-        }
-        if($total!=100){
-            return false;
-        }
-        return true;
-    }
 }

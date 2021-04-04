@@ -19,5 +19,11 @@ class Recipe extends Model
                 "inventory_id")
                 ->withPivot(['percent']);        
     }
+    public function productions()
+    {
+        return $this->hasMany(Productions::class, 
+                "productions", "id", "recipe_id");
+        
+    }
     
 }

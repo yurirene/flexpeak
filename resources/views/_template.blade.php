@@ -6,7 +6,7 @@
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-
+        @yield('css')
         <title>Perfumaria</title>
     </head>
     <body>
@@ -18,7 +18,7 @@
                 <a class="navbar-brand" href="#">Perfumaria</a>
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="{{route("report.index")}}">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{route("inventory.index")}}">Estoque</a>
@@ -31,6 +31,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{route("production.index")}}">Produção</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route("report.report")}}">Relatórios</a>
                     </li>
                 </ul>
             </div>

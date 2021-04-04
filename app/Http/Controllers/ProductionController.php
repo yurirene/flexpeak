@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteRequest;
+use App\Http\Requests\StoreUpdateProductionRequest;
 use App\Models\Production;
 use App\Models\Recipe;
 use App\Services\ProductionService;
-use Illuminate\Http\Request;
 use function redirect;
 use function view;
 
@@ -21,7 +22,7 @@ class ProductionController extends Controller
     
     public function index()
     {
-        $list = Production::with("recipe")->paginate(5);
+        $list = Production::with("recipe")->orderBy("created_at", "desc")->paginate(5);
         
         return view("production.index", ["list"=>$list]);
     }
@@ -32,7 +33,7 @@ class ProductionController extends Controller
         return view("production.create",["recipes"=>$recipes]);
     }
 
-    public function store(Request $request)
+    public function store(StoreUpdateProductionRequest $request)
     {
         $return = $this->service->store($request->all());
         
@@ -60,7 +61,7 @@ class ProductionController extends Controller
         return view("production.edit",["production"=>$production, "recipe"=>$recipe]);
     }
 
-    public function update(Request $request, $id)
+    public function update(StoreUpdateProductionRequest $request, $id)
     {
         $return = $this->service->update($request->all(),$id);
         
@@ -69,13 +70,13 @@ class ProductionController extends Controller
             "type"=> $return["type"]
         ];
         
-        return redirect()->route($return["route"], $id)->with($message);
+        return redirect()->route($return["route"])->with($message);
         
     }
 
-    public function destroy(Request $request)
+    public function destroy(DeleteRequest $request)
     {
-        $return = $this->service->destroy($request->all());
+        $return = $this->service->destroy($request->id);
         
         $message = [
             "message" => $return["message"],

@@ -86,16 +86,19 @@ class OperationService
                 "success"=>false,
                 "message"=> $e->getMessage(),
                 "type"=>"danger",
-                "route" =>"operation.edit"
+                "route" => [
+                    "operation.edit",
+                    "id" => $id
+                ]
             ];
         }
     }
 
-    public function destroy(array $data):array
+    public function destroy($id):array
     {
         try {
             
-            $operation = Operation::find($data["id"]);
+            $operation = Operation::find($id);
             if (!$operation) {
                 throw new InvalidArgumentException("Registro Inválido!");
             }

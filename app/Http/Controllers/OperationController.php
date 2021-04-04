@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteRequest;
 use App\Http\Requests\StoreUpdateOperationRequest;
 use App\Models\Inventory;
 use App\Models\Operation;
 use App\Models\OperationType;
 use App\Services\OperationService;
-use Illuminate\Http\Request;
 use function redirect;
 use function view;
 
@@ -80,15 +80,15 @@ class OperationController extends Controller
             "type"=> $return["type"]
         ];
         
-        return redirect()->route($return["route"],["id"=>$id])->with($message);
+        return redirect()->route($return["route"])->with($message);
         
         
     }
 
-    public function destroy(Request $request)
+    public function destroy(DeleteRequest $request)
     {
         
-        $return = $this->service->destroy($request->all());
+        $return = $this->service->destroy($request->id);
         
         $message = [
             "message" => $return["message"],

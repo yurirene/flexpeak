@@ -11,6 +11,13 @@ class Inventory extends Model
     protected $table = "inventories";
     protected $fillable = ["name", "current_qty", "minimal_qty", "is_fragrance"];
     
-    
+    public function recipes()
+    {
+        return $this->belongsToMany(Recipe::class, 
+                "recipe_components", 
+                "inventory_id", 
+                "recipe_id");        
+        
+    }
     
 }

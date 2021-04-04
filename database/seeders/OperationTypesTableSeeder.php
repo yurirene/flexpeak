@@ -12,15 +12,6 @@ class OperationTypesTableSeeder extends Seeder
     public function run()
     {
         
-        DB::table('operation_types')->insert(
-            array(
-                [
-                    'name' => "Entrada"
-                ],
-                [
-                    "name"=>"Saída"
-                ]
-            )
-        );
+        
     }
 }

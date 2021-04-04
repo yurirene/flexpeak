@@ -25,4 +25,9 @@ class Production extends Model
                 "operation_id");        
     }
     
+    public function recipes()
+    {
+        return $this->hasOne(Recipe::class, "id", "recipe_id");        
+    }
+    
 }

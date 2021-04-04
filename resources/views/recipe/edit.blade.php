@@ -59,9 +59,9 @@
     </div>
     <div class="card-footer">
         <p class="text-muted">
-            Criado em: {{$recipe->created_at}}
+            Criado em: {{date("d/m/y H:i:s", strtotime($recipe->created_at))}}
             <br>
-            Atualizado em: {{$recipe->updated_at}}</p>
+            Atualizado em: {{date("d/m/y H:i:s", strtotime($recipe->updated_at))}}</p>
     </div>
 </div>
 
@@ -77,7 +77,6 @@ $("#addRow").click(function () {
     html += "<div class='form-group'>";
     html += "<label for='ingredients[id][]'>Ingrediente</label>";
     html += "<select class='form-control' id='ingredients[id][]' name='ingredients[id][]' required>";
-    html += "<option selected disabled>Selecione um Ingrediente</option>";
     @foreach($inventories as $inventory)
     html += "<option value='{{$inventory->id}}'>{{$inventory->name}}</option>";
     @endforeach

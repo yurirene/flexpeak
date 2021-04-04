@@ -68,15 +68,18 @@ class InventoryService
                 "success"=>false,
                 "message"=> $e->getMessage(),
                 "type"=>"danger",
-                "route" =>"inventory.edit"
+                "route" => [
+                    "inventory.edit",
+                    "id" => $id
+                ]
             ];
         }
     }
 
-    public function destroy(array $data):array
+    public function destroy($id):array
     {
         try {
-            $item = Inventory::find($data["id"]);
+            $item = Inventory::find($id);
             if (!$item) {
                 throw new InvalidArgumentException("Registro não Encontrado!");
             }

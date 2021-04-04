@@ -50,9 +50,9 @@
     </div>
     <div class="card-footer">
         <p class="text-muted">
-            Criado em: {{$operation->created_at}}
+            Criado em: {{date("d/m/y H:i:s", strtotime($operation->created_at))}}
             <br>
-            Atualizado em: {{$operation->updated_at}}</p>
+            Atualizado em: {{date("d/m/y H:i:s", strtotime($operation->updated_at))}}</p>
     </div>
 </div>
 

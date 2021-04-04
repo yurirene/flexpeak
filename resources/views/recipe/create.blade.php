@@ -10,16 +10,21 @@
             @csrf
             <div class="form-group">
                 <label for="name">Nome</label>
-                <input type="text" name="name" id="name" class="form-control" value="{{old('name')}}">
+                <input type="text" name="name" id="name" class="form-control" value="{{old('name')}}" required="">
             </div>
-            <div class="row">
+            @if(old()!=null)
+            @foreach(old('ingredients.id', array()) as $i)
+            <div class="row" id="inputFormRow">
                 <div class="col">
                     <div class="form-group">
                         <label for="ingredients[id][]">Ingrediente</label>
                         <select class="form-control" id="ingrediente[id][]" name="ingredients[id][]" required>
-                            <option selected disabled>Selecione um Ingrediente</option>
                             @foreach($inventories as $inventory)
-                            <option value="{{$inventory->id}}">{{$inventory->name}}</option>
+                            <option value="{{$inventory->id}}"
+                                @if((int)old('ingredients.id.'.$loop->parent->index) == (int)$inventory->id)
+                                {{'selected'}}
+                                @endif
+                                >{{$inventory->name}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -28,15 +33,21 @@
                     <div class="form-group">
                         <label for="ingredients[percent][]">Porcentagem</label>
                         <div class="input-group">
-                            <input type="text" class="form-control decimal" name="ingredients[percent][]" id="ingredients[percent][]" required>
+                            <input type="text" class="form-control decimal" 
+                                   name="ingredients[percent][]" 
+                                   id="ingredients[percent][]" 
+                                   value="{{old('ingredients.percent.'.$loop->index)}}">
                             <div class="input-group-append">
                                 <div class="input-group-text">%</div>
+                                <button id="removeRow" type="button" class="btn btn-danger">Remover</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            @endforeach
             
+            @endif
             <div id="newRow"></div>
             <button type="button" class="btn btn-secondary float-right" id="addRow">Adicionar Ingrediente</button>
             
@@ -59,7 +70,6 @@ $("#addRow").click(function () {
     html += "<div class='form-group'>";
     html += "<label for='ingredients[id][]'>Ingrediente</label>";
     html += "<select class='form-control' id='ingredients[id][]' name='ingredients[id][]' required>";
-    html += "<option selected disabled>Selecione um Ingrediente</option>";
     @foreach($inventories as $inventory)
     html += "<option value='{{$inventory->id}}'>{{$inventory->name}}</option>";
     @endforeach
