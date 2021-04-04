@@ -13,7 +13,6 @@
                     <div class="form-group">
                         <label for="recipe-production">Fórmula</label>
                         <select class="form-control" id="recipe-production" name="recipe" required>
-                            <option selected disabled>Selecione a Receitas</option>
                             @foreach($recipes as $recipe)
                             <option value="{{$recipe->id}}"
                                     data-info='@json($recipe->components)'>
@@ -25,7 +24,7 @@
                     <div class="form-group">
                         <label for="volume-production">Volume</label>
                         <div class="input-group">
-                            <input type="text" name="volume" id="volume-production" class="form-control decimal">
+                            <input type="text" name="volume" id="volume-production" class="form-control decimal" required>
                             <div class="input-group-append">
                                 <div class="input-group-text">mL</div>
                             </div>

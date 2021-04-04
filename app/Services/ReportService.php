@@ -16,7 +16,6 @@ class ReportService
         $return["labels"]= array();
         $return["data"]= array();
         foreach($mostProduced as $chart){
-            
             $return["labels"][] = $chart["name"];
             $return["data"][] = $chart["volume"];
         }
@@ -78,6 +77,8 @@ class ReportService
     {
         $useds = $this->mostUsedFragrance($data);
         $chart = array();
+        $chart["labels"]= array();
+        $chart["data"]= array();
         foreach($useds as $key => $used){
             $chart["labels"][] = $used[0]["fragrance_name"];
             $chart["data"][] = $key;

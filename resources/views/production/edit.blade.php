@@ -26,7 +26,7 @@
                             <input type="text" name="volume" 
                                    id="volume-production-edit" 
                                    class="form-control decimal" 
-                                   value="{{$production->volume}}">
+                                   value="{{$production->volume}}" required>
                             <div class="input-group-append">
                                 <div class="input-group-text">mL</div>
                             </div>

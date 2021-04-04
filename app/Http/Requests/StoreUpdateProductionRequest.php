@@ -33,7 +33,8 @@ class StoreUpdateProductionRequest extends FormRequest
         return [
             'recipe.required' => 'É necessário selecionar uma Fórmula',
             'volume.numeric' => 'Insira apenas números no campo Volume',
-            'volume.min' => 'Insira valor maior ou igual a 1'
+            'volume.min' => 'Insira valor maior ou igual a 1',
+            'volume.required' => 'Preencha o campo Volume',
         ];
     }
 }

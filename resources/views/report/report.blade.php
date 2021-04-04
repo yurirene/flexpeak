@@ -49,13 +49,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($mostProduced as $produced)
+                        @forelse($mostProduced as $produced)
                         <tr>
                             <td class="text-center">{{$produced['name']}}</td>                    
                             <td class="text-center">{{$produced['volume']}} mL</td>                    
                             <td class="text-center">{{$produced['quantity']}}</td>                    
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr><td colspan="3" class="text-center">Sem Dados</td></tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -76,18 +78,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($mostUsedFragrance as $key => $fragrance)
+                        @forelse($mostUsedFragrance as $key => $fragrance)
                         <tr>
                             <td>{{$fragrance[0]["fragrance_name"]}}</td>
                             <td>{{$key}}</td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr><td colspan="2" class="text-center">Sem Dados</td></tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    
 </div>
 
 
@@ -96,6 +99,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.1/dist/chart.min.js"></script>
 <script src="js/bootstrap-datepicker.min.js"></script>
 <script src="locale/bootstrap-datepicker.pt-BR.min.js"></script>
+
 <script>
 $('.datepicker').datepicker({
     format: 'dd/mm/yyyy',
@@ -139,5 +143,6 @@ var myChart = new Chart(ctx_second, {
         }
     }
 });
+
 </script>
 @endsection

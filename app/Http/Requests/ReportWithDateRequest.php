@@ -24,7 +24,7 @@ class ReportWithDateRequest extends FormRequest
     public function rules()
     {
         return [
-            "start" => "required|date|date_format:d/m/Y",
+            "start" => "required|date_format:d/m/Y",
             "end" => "date_format:d/m/Y|after_or_equal:start|nullable"
         ];
     }

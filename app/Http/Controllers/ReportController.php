@@ -46,14 +46,14 @@ class ReportController extends Controller
     {
         
         $chart = $this->service->reportChart($request->all());
-        $mostUsedFragranceChart = $this->service->mostUsedFragranceChart($request->all());
+        $chart_used = $this->service->mostUsedFragranceChart($request->all());
         $mostProduced = $this->service->mostProduced($request->all());
         $mostUsedFragrance = $this->service->mostUsedFragrance($request->all());
         return view("report.report", [
             "chart"=>$chart, 
             "mostProduced"=>$mostProduced,
             "mostUsedFragrance"=>$mostUsedFragrance,
-            "mostUsedFragranceChart"=>$mostUsedFragranceChart,
+            "chart_used"=>$chart_used,
             "date" =>$request->all()
         ]);
         
